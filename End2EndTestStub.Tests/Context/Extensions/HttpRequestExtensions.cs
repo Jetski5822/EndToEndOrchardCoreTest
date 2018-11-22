@@ -49,7 +49,7 @@ namespace End2EndTestStub.Tests.Context
                 Encoding.UTF8,
                 "application/json");
 
-            return client.PatchAsync(requestUri, content);
+            return HttpRequestExtensions.PatchAsync(client, requestUri, content);
         }
 
         /// <summary>
@@ -78,7 +78,8 @@ namespace End2EndTestStub.Tests.Context
                 RequestUri = new Uri(client.BaseAddress + requestUri),
                 Content = content
             };
-            client.DefaultRequestHeaders.ExpectContinue = false;
+
+            request.Headers.ExpectContinue = false;
             return client.SendAsync(request);
         }
 
@@ -147,14 +148,14 @@ namespace End2EndTestStub.Tests.Context
                 Encoding.UTF8,
                 "application/json");
 
-            if (!client.DefaultRequestHeaders.Accept.Any(x => x.MediaType == "application/json"))
-            {
-                client.DefaultRequestHeaders
-                  .Accept
-                  .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            }
+            var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
+            request.Content = content;
 
-            return client.PostAsync(requestUri, content);
+            request.Headers
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            return client.SendAsync(request);
         }
 
         public static Task<HttpResponseMessage> PostJsonAsync(
@@ -167,14 +168,14 @@ namespace End2EndTestStub.Tests.Context
                 Encoding.UTF8,
                 "application/json");
 
-            if (!client.DefaultRequestHeaders.Accept.Any(x => x.MediaType == "application/json"))
-            {
-                client.DefaultRequestHeaders
-                  .Accept
-                  .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            }
+            var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
+            request.Content = content;
 
-            return client.PostAsync(requestUri, content);
+            request.Headers
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            return client.SendAsync(request);
         }
 
         public static Task<HttpResponseMessage> PostJsonApiAsync(
@@ -187,11 +188,14 @@ namespace End2EndTestStub.Tests.Context
                 Encoding.UTF8,
                 "application/vnd.api+json");
 
-            client.DefaultRequestHeaders
-              .Accept
-              .Add(new MediaTypeWithQualityHeaderValue("application/vnd.api+json"));
+            var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
+            request.Content = content;
 
-            return client.PostAsync(requestUri, content);
+            request.Headers
+                .Accept
+                .Add(new MediaTypeWithQualityHeaderValue("application/vnd.api+json"));
+
+            return client.SendAsync(request);
         }
     }
 }

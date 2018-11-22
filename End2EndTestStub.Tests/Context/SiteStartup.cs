@@ -22,7 +22,7 @@ namespace End2EndTestStub.Tests.Context
         {
             services.AddOrchardCms(builder =>
                 builder
-                    .AddTenantFeatures(
+                    .AddGlobalFeatures(
                         "OrchardCore.Tenants"
                     )
                     .ConfigureServices(collection =>
